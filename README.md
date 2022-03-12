@@ -1,4 +1,5 @@
 github issue api 찾아보기  
+https://docs.github.com/en/rest/reference/issues  
 생활코딩 로드맵 지도 기술 찾아보기  
 https://github.com/markitx/issue-graph  
 https://seomal.org/  
