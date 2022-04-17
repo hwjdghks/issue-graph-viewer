@@ -1,4 +1,5 @@
 const http = require('http');
+const { options } = require('request');
 const _req = require('request');
 
 var github = 'https://github.com/sunghwan2789/Bible2PPT';
@@ -15,10 +16,19 @@ var server = http.createServer(function (requset, response) {
         var result = _req({
             uri: _url,
             method: 'GET',
+            json: true,
             headers: { 'user-agent': 'node.js' }
         }, function (error, res, body) {
             response.writeHead(200, { "Content-Type": "text/json; charset=utf-8" });
-            response.write(body);
+            console.log(typeof body);
+            // var _body = JSON.parse(body);
+            // console.log(Object.keys(_body).length);
+            // console.log(_body.length);
+            for (var x = 0; x < Object.keys(body).length; x++){
+                console.log(body[x]['title']);
+                // console.log(_body[x]['number'], _body[x]['title']);
+            }
+            // response.write(body);
             response.end();
         });
     }
