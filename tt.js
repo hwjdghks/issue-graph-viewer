@@ -10,18 +10,32 @@ var server = http.createServer(function (requset, response) {
         response.end();
     }
     else if (requset.url == '/test' && requset.method == 'GET') {
-        var _url = 'https://api.github.com/repos/'
-            + github.substr(19)
-            + '/issues?state=all';
+        var owner = github.split('/')[3];
+        var repo = github.split('/')[4];
+        
+        var getRepoString = `https://api.github.com/repos/${owner}/${repo}`;
+        var getIssueString = getRepoString + `/issues?state=all`;
+
+        var getCreateTime = '';
+        _req({
+            uri:getRepoString,
+            method: 'GET',
+            json: true,
+            headers: { 'user-agent': 'node.js',
+                        "Content-Type": "Application/json; charset=utf-8" }
+        }, function(error, res, body){
+            getCreateTime = body['created_at'];
+            console.log('hello', getCreateTime);
+        });
+        console.log('Create-at : ', getCreateTime);
         var result = _req({
-            uri: _url,
+            uri: getIssueString,
             method: 'GET',
             json: true,
             headers: { 'user-agent': 'node.js',
                         "Content-Type": "Application/json; charset=utf-8" }
         }, function (error, res, body) {
             response.writeHead(200, { "Content-Type": "Application/json; charset=utf-8" });
-            console.error('err', error);
             console.log(typeof body);
             // var _body = JSON.parse(body);
             // console.log(Object.keys(_body).length);
