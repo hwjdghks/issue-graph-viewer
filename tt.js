@@ -17,9 +17,11 @@ var server = http.createServer(function (requset, response) {
             uri: _url,
             method: 'GET',
             json: true,
-            headers: { 'user-agent': 'node.js' }
+            headers: { 'user-agent': 'node.js',
+                        "Content-Type": "Application/json; charset=utf-8" }
         }, function (error, res, body) {
-            response.writeHead(200, { "Content-Type": "text/json; charset=utf-8" });
+            response.writeHead(200, { "Content-Type": "Application/json; charset=utf-8" });
+            console.error('err', error);
             console.log(typeof body);
             // var _body = JSON.parse(body);
             // console.log(Object.keys(_body).length);
