@@ -1,5 +1,7 @@
 github issue api 찾아보기  
 https://docs.github.com/en/rest/reference/issues  
+https://docs.github.com/en/rest/reference/repos#get-a-repository  
+
 postman으로 api 작동확인 가능  
 생활코딩 로드맵 지도 기술 찾아보기  
 https://github.com/markitx/issue-graph  
