@@ -39,13 +39,9 @@ var server = http.createServer(function (requset, response) {
             response.writeHead(200, {
                 'Content-Type': 'Application/json; charset=utf-8'
             });
-            console.log(typeof body);
-
-            // var _body = JSON.parse(body);
-            // console.log(Object.keys(_body).length);
-            // console.log(_body.length);
-            // Check last page => if(body[0] == null) console.log(body[0]);
-
+            // 전체 페이지수 method:HEAD로 가져와서 가공할 것
+            console.log(res.headers.link);
+            // 타이틀 순서대로 출력 method:GET
             for (var x = 0; x < Object.keys(body).length; x++) {
                 response.write(String(body[x]['number']).padStart(3, ' ')
                     + ' : '
@@ -53,7 +49,6 @@ var server = http.createServer(function (requset, response) {
                     + '\n'
                 );
             }
-            //response.write(body);
             response.end();
         });
     }
