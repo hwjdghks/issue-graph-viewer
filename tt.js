@@ -1,5 +1,6 @@
 const http = require('http');
 const _req = require('request');
+const makeLink = require('./makeLink.js');
 
 var github = 'https://github.com/sunghwan2789/Bible2PPT';
 var server = http.createServer(function (requset, response) {
@@ -11,24 +12,31 @@ var server = http.createServer(function (requset, response) {
 
     // github data get
     else if (requset.url == '/test' && requset.method == 'GET') {
-        var owner = github.split('/')[3];
-        var repo = github.split('/')[4];
-
-        // basic GET qs
-        var getRepoString = `https://api.github.com/repos/${owner}/${repo}`;
-        var currentPage = 1;
-        var perPage = 40;
-        var direction = 'asc'
-
-        // finished version GET qs
-        var getIssueString = getRepoString
-            + `/issues?state=all`
-            + `&per_page=${perPage}`
-            + `&page=${currentPage}`
-            + `&direction=${direction}`;
-
+        let Link = new makeLink(github);
         _req({
-            uri: getIssueString,
+            uri: Link.getQueryString(),
+            method: 'HEAD',
+            headers: {
+                'user-agent': 'node.js',
+                'Content-Type': 'Application/json; charset=utf-8'
+            }
+        }, function (err, res, body) {
+            // 페이지 수가 1개뿐이면 헤더에 링크가 나타나지 않는다.
+            if (res.headers.link === undefined) {
+                Link.setMaxPage(1);
+            } else {
+                let headerLink = res.headers.link;
+                console.log(headerLink.lastIndexOf('page='));
+                // 전체 페이지 수 잘라내는 명령어.
+                // api 요청 파라미터 순서가 바뀔 경우 수정 필요
+                let maxPage = headerLink.slice(headerLink.lastIndexOf('page=') + 5,
+                    headerLink.lastIndexOf('&'));
+                console.log('Total Pages : ' + maxPage);
+                Link.setMaxPage(maxPage);
+            }
+        });
+        _req({
+            uri: Link.getQueryString(),
             method: 'GET',
             json: true,
             headers: {
@@ -39,8 +47,6 @@ var server = http.createServer(function (requset, response) {
             response.writeHead(200, {
                 'Content-Type': 'Application/json; charset=utf-8'
             });
-            // 전체 페이지수 method:HEAD로 가져와서 가공할 것
-            console.log(res.headers.link);
             // 타이틀 순서대로 출력 method:GET
             for (var x = 0; x < Object.keys(body).length; x++) {
                 response.write(String(body[x]['number']).padStart(3, ' ')

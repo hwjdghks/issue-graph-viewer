@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/hwjdghks/issue-graph-viewer#readme",
   "dependencies": {
+    "npm-check-updates": "^16.0.5",
     "request": "^2.88.2"
   }
 }
