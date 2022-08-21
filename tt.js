@@ -3,10 +3,6 @@ import fetch from 'node-fetch';
 import _req from 'request';
 import * as makeLink from './makeLink.js';
 import * as authData from './authData.js';
-//const http = require('http');
-//const _req = require('request');
-//const fetch = require('node-fetch');
-//const makeLink = require('./makeLink.js');
 
 var server = http.createServer(function (requset, response) {
     if (requset.url == '/') {
