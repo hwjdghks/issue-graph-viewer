@@ -1,4 +1,4 @@
-class makeLink {
+export class makeLink {
     constructor(url) {
         this.owner = url.split('/')[3];
         this.repo = url.split('/')[4];
@@ -40,4 +40,9 @@ class makeLink {
     }
 }
 
-module.exports = makeLink;
+export function hasLink(data) {
+    if (data === null)
+        return false;
+    else
+        return true;
+}

@@ -1,8 +1,13 @@
-const http = require('http');
-const _req = require('request');
-const makeLink = require('./makeLink.js');
+import http from 'http';
+import fetch from 'node-fetch';
+import _req from 'request';
+import * as makeLink from './makeLink.js';
+import * as authData from './authData.js';
+//const http = require('http');
+//const _req = require('request');
+//const fetch = require('node-fetch');
+//const makeLink = require('./makeLink.js');
 
-var github = 'https://github.com/sunghwan2789/Bible2PPT';
 var server = http.createServer(function (requset, response) {
     if (requset.url == '/') {
         response.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
@@ -12,7 +17,38 @@ var server = http.createServer(function (requset, response) {
 
     // github data get
     else if (requset.url == '/test' && requset.method == 'GET') {
-        let Link = new makeLink(github);
+        let Link = new makeLink.makeLink(authData.url);
+        fetch(Link.getQueryString(), {
+            headers:{
+                'Authorization' : `token ${authData.token}`,
+                'accpet' : 'application/vnd.github+json',
+            }
+        })
+        .then((Response) => {
+            if (!Response.ok) {
+                throw new Error(`HTTP error, status = ${Response.status}`);
+            }
+            let headerLink = Response.headers.get('link');
+            if (makeLink.hasLink(headerLink)) {
+                let maxPage = headerLink.slice(headerLink.lastIndexOf('page=') + 5,
+                headerLink.lastIndexOf('&'));
+                console.log('Total Pages : ' + maxPage);
+                Link.setMaxPage(maxPage);
+            }
+            else {
+                Link.setMaxPage(1);
+            }
+            console.log('setPage = ' + Link.getMaxPage());
+            return Response;
+        })
+        .then((data) => {
+            //response.write(data);
+        })
+        .catch((error) => {
+            console.log(`Error: ${error.message}`);
+        });
+    }
+/*
         _req({
             uri: Link.getQueryString(),
             method: 'HEAD',
@@ -58,7 +94,7 @@ var server = http.createServer(function (requset, response) {
             response.end();
         });
     }
-
+*/
     // Server error 
     requset.on('error', function (error) {
         response.writeHead(404);
