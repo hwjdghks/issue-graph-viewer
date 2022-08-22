@@ -1,42 +1,42 @@
 export class makeLink {
-    constructor(url) {
-        this.owner = url.split('/')[3];
-        this.repo = url.split('/')[4];
-        this.currentPage = 1;
-        this.perPage = 100;
-        this.direction = 'asc';
+    constructor(_url) {
+        this._owner = _url.split('/')[3];
+        this._repo = _url.split('/')[4];
+        this._currentPage = 1;
+        this._perPage = 100;
+        this._direction = 'asc';
     }
-    getMaxPage() {
-        return this.maxPage;
+    get maxPage() {
+        return this._maxPage;
     }
-    setMaxPage(num) {
-        this.maxPage = num;
-    }
-
-    getPerPage() {
-        return this.perPage;
-    }
-    setPerPage(num) {
-        this.perPage = num;
+    set maxPage(num) {
+        this._maxPage = num;
     }
 
-    getCurrentPage() {
-        return this.currentPage;
+    get perPage() {
+        return this._perPage;
     }
-    setCurrentPage(num) {
-        this.currentPage = num;
-    }
-
-    getRepoString() {
-        return `https://api.github.com/repos/${this.owner}/${this.repo}`;
+    set perPage(num) {
+        this._perPage = num;
     }
 
-    getQueryString() {
-        return this.getRepoString()
+    get currentPage() {
+        return this._currentPage;
+    }
+    set currentPage(num) {
+        this._currentPage = num;
+    }
+
+    get repoString() {
+        return `https://api.github.com/repos/${this._owner}/${this._repo}`;
+    }
+
+    get queryString() {
+        return this.repoString
             + `/issues?state=all`
-            + `&per_page=${this.perPage}`
-            + `&page=${this.currentPage}`
-            + `&direction=${this.direction}`;
+            + `&per_page=${this._perPage}`
+            + `&page=${this._currentPage}`
+            + `&direction=${this._direction}`;
     }
 }
 
